@@ -16,7 +16,7 @@ class ParserTest extends FunSuite with Matchers with ShouldVerb {
   test("Get message dataframe") {
 
     val df = Parser.getMessageDataFrame("messageWithMissingFields.json")
-    
+
     //Checks that all the messages are parsed to dataframe and have the correct schema
     df.count() shouldBe 3
     df.schema.toDDL shouldBe schema
