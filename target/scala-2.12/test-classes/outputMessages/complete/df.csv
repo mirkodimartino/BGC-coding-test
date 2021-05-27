@@ -1,0 +1,4 @@
+environment,tradeId,tradeStatus,tradeDate,sideId,side,amount,price,currency,counterpartyId,nominal
+BETA,51849291,NEW,2021-05-17,1,Seller,250,10.26,USD,123XYZ,2565.00
+BETA,51849291,NEW,2021-05-17,2,Buyer,150,7.31,GBP,456abc,1096.50
+BETA,51849291,NEW,2021-05-17,3,Buyer,100,7.25,GBP,789opv,725.00

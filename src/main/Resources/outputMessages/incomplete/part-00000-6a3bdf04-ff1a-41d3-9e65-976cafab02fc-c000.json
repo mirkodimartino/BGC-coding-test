@@ -1,0 +1,2 @@
+{"environment":"BETA","tradeId":"51849291","tradeStatus":"NEW","tradeDate":"2021-05-17","sideId":"1","side":"Seller","amount":250,"price":10.26,"currency":"USD","counterpartyId":"123XYZ","nominal":2565.00}
+{"environment":"BETA","tradeId":"51849291","tradeStatus":"NEW","tradeDate":"2021-05-17","sideId":"2","side":"Buyer","amount":150,"price":7.31,"currency":"GBP","counterpartyId":"456abc","nominal":1096.50}
