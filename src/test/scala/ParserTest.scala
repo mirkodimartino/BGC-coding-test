@@ -16,9 +16,11 @@ class ParserTest extends FunSuite with Matchers with ShouldVerb {
   test("Get message dataframe") {
 
     val df = Parser.getMessageDataFrame("messageWithMissingFields.json")
-
+    
+    //Checks that all the messages are parsed to dataframe and have the correct schema
     df.count() shouldBe 3
     df.schema.toDDL shouldBe schema
+
     //It has null values where fields are missing
     val incompleteRecord = df.filter("amount IS NULL AND nominal IS NULL")
     incompleteRecord.show()
@@ -31,6 +33,7 @@ class ParserTest extends FunSuite with Matchers with ShouldVerb {
       .option("header", "true")
       .csv(getResourcePath("outputMessages/complete/df.csv"))
 
+    //Checks that all the complete sideId messages are parsed
     val completeMessages = Parser.getCompleteMessages(df)
     completeMessages.count() shouldBe 3
     completeMessages.select("sideId").collect().map(_.getString(0)) should equal(Array("1", "2", "3"))
@@ -43,10 +46,12 @@ class ParserTest extends FunSuite with Matchers with ShouldVerb {
       .option("header", "true")
       .csv(getResourcePath("outputMessages/incomplete/df.csv"))
 
+    //Checks that all the complete sideId messages are parsed
     val completeMessages = Parser.getCompleteMessages(df)
     completeMessages.count() shouldBe 2
     completeMessages.select("sideId").collect().map(_.getString(0)) should equal(Array("1", "2"))
 
+    //Checks that the side with missing fields is parsed as exception message dataframe
     val incompleteMessage = Parser.getExceptionMessages(df)
     incompleteMessage.count() shouldBe 1
     incompleteMessage.select("sideId").collect().map(_.getString(0)).head shouldBe "3"
