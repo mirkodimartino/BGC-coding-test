@@ -12,6 +12,13 @@ object Parser {
     .appName("Simple Application").getOrCreate()
   val resourcePath = "src/main/Resources"
 
+  /**
+   * Method that parsers the message giving an input path, output path and errorPath
+   *
+   * @param inputPath  the path where the input message is located
+   * @param outputPath the path where the parser should save the parsed messages
+   * @param errorPath  the path for the dead Letter Queue file
+   */
   def parseMessage(inputPath: String, outputPath: String, errorPath: String): Unit = {
     val df = getMessageDataFrame(inputPath)
     df.show()
@@ -21,10 +28,16 @@ object Parser {
     writeMessages(errorMessages, errorPath)
   }
 
+  /**
+   * Method that generate the dataframe for a parsed input message
+   *
+   * @param filePath the path for the input message
+   * @param spark    the implicit spark session
+   * @return the dataframe related to the input message
+   */
+
   def getMessageDataFrame(filePath: String)(implicit spark: SparkSession): DataFrame = {
-
     import spark.implicits._
-
     spark.read.json(getResourcePath(filePath))
       .select(
         $"environment",
@@ -47,6 +60,13 @@ object Parser {
       .withColumn("nominal", $"price" * $"amount")
   }
 
+  /**
+   * Method that returns the dataframe for the complete messages
+   *
+   * @param dataFrame    the input dataframe
+   * @param sparkSession the implicit spark session
+   * @return the dataframe with all the complete/parsed messages
+   */
   def getCompleteMessages(dataFrame: DataFrame)(implicit sparkSession: SparkSession): DataFrame = {
     import sparkSession.implicits._
     //We assume that the sideId is always present
@@ -64,6 +84,13 @@ object Parser {
     )
   }
 
+  /**
+   * Method that returns the dataframe for the messages that end up in the Dead Letter queue
+   *
+   * @param dataFrame    the input dataframe
+   * @param sparkSession the implicit spark session
+   * @return the dataframe with the exceptions
+   */
   def getExceptionMessages(dataFrame: DataFrame)(implicit sparkSession: SparkSession): DataFrame = {
     import sparkSession.implicits._
     //We assume that the sideId field is always present
@@ -82,11 +109,22 @@ object Parser {
       .select("sideId").withColumn("errorMessage", lit("Missing mandatory field!"))
   }
 
+  /**
+   * Method that write the dataframes as json files and prints the jsons to console
+   *
+   * @param dataframe  the input dataframe message
+   * @param outputFile the path to the output location
+   */
   def writeMessages(dataframe: DataFrame, outputFile: String): Unit = {
     printToConsolle(dataframe)
     dataframe.repartition(1).write.mode("overwrite").json(resourcePath + "/" + outputFile)
   }
 
+  /**
+   * Method that prints the df to console as json messages
+   *
+   * @param df
+   */
   def printToConsolle(df: DataFrame) = df.foreach(row => println(row.json))
 
 }
