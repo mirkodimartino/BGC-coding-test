@@ -116,7 +116,7 @@ object Parser {
    * @param outputFile the path to the output location
    */
   def writeMessages(dataframe: DataFrame, outputFile: String): Unit = {
-    printToConsolle(dataframe)
+    printToConsole(dataframe)
     dataframe.repartition(1).write.mode("overwrite").json(resourcePath + "/" + outputFile)
   }
 
@@ -125,6 +125,6 @@ object Parser {
    *
    * @param df the dataframe containing the records to be printed as jsons
    */
-  def printToConsolle(df: DataFrame) = df.foreach(row => println(row.json))
+  def printToConsole(df: DataFrame) = df.foreach(row => println(row.json))
 
 }
