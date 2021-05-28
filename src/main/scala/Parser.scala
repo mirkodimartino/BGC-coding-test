@@ -123,7 +123,7 @@ object Parser {
   /**
    * Method that prints the df to console as json messages
    *
-   * @param df
+   * @param df the dataframe containing the records to be printed as jsons
    */
   def printToConsolle(df: DataFrame) = df.foreach(row => println(row.json))
 
